@@ -52,6 +52,7 @@
     </Compile>
     <Compile Include="Helpers\ImageConverterHelper.cs" />
     <Compile Include="Helpers\RequestHelper.cs" />
+    <Compile Include="Models\ConfigurationModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

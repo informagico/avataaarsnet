@@ -14,11 +14,16 @@ namespace AvataaarsNet
 	/// </summary>
 	public partial class AvataaarsGenerator : UserControl, INotifyPropertyChanged
 	{
-		public static readonly DependencyProperty AvataaarsImageProperty = DependencyProperty.Register("AvataaarsImage", typeof(Bitmap), typeof(AvataaarsGenerator));
+		public static readonly DependencyProperty AvataaarsImageProperty = 
+			DependencyProperty.Register(
+				"AvataaarsImage",
+				typeof(Bitmap),
+				typeof(AvataaarsGenerator)
+			);
 		public Bitmap AvataaarsImage
 		{
-			get { return (Bitmap)this.GetValue(AvataaarsGenerator.AvataaarsImageProperty); }
-			private set { this.SetValue(AvataaarsGenerator.AvataaarsImageProperty, value); }
+			get { return (Bitmap)this.GetValue(AvataaarsImageProperty); }
+			set { this.SetValue(AvataaarsImageProperty, value); }
 		}
 
 		private static Avataaars avataaars;
