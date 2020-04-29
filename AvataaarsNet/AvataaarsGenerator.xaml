@@ -8,9 +8,14 @@
 	xmlns:local="clr-namespace:AvataaarsNet"
 	mc:Ignorable="d"
 	MaxWidth="500">
+	<UserControl.Resources>
+		<BooleanToVisibilityConverter
+			x:Key="BooleanToVisibilityConverter" />
+	</UserControl.Resources>
 	<Grid>
 		<Grid.RowDefinitions>
-			<RowDefinition MaxHeight="300"></RowDefinition>
+			<RowDefinition
+				MaxHeight="300"></RowDefinition>
 			<RowDefinition></RowDefinition>
 		</Grid.RowDefinitions>
 
@@ -25,6 +30,19 @@
 			<ItemsControl
 				Margin="8 0">
 				<DockPanel
+					Visibility="{Binding Path=EnableWidth, Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}"
+					Margin="0 4">
+					<TextBlock
+						VerticalAlignment="Center"
+						FontWeight="DemiBold"
+						Margin="0 0 16 0"
+						Width="110">Width</TextBlock>
+					<ComboBox
+						x:Name="AvatarWidthCombo"
+						SelectedValue="{Binding Path=AvatarWidth, Mode=TwoWay}"></ComboBox>
+				</DockPanel>
+
+				<DockPanel
 					Margin="0 4">
 					<TextBlock
 						VerticalAlignment="Center"
@@ -32,8 +50,8 @@
 						Margin="0 0 16 0"
 						Width="110">Style</TextBlock>
 					<ComboBox
-						x:Name="AvatarStyle"
-						SelectedValue="{Binding Path=SelectedAvatarStyle, Mode=TwoWay}"></ComboBox>
+						x:Name="AvatarStyleCombo"
+						SelectedValue="{Binding Path=AvatarStyle, Mode=TwoWay}"></ComboBox>
 				</DockPanel>
 
 				<DockPanel
@@ -44,8 +62,8 @@
 						Margin="0 0 16 0"
 						Width="110">Skin</TextBlock>
 					<ComboBox
-						x:Name="SkinColor"
-						SelectedValue="{Binding Path=SelectedSkinColor, Mode=TwoWay}"></ComboBox>
+						x:Name="SkinColorCombo"
+						SelectedValue="{Binding Path=SkinColor, Mode=TwoWay}"></ComboBox>
 				</DockPanel>
 
 				<DockPanel
@@ -56,8 +74,8 @@
 						Margin="0 0 16 0"
 						Width="110">Eyebrows</TextBlock>
 					<ComboBox
-						x:Name="Eyesbrows"
-						SelectedValue="{Binding Path=SelectedEyebrows, Mode=TwoWay}"></ComboBox>
+						x:Name="EyebrowTypeCombo"
+						SelectedValue="{Binding Path=EyebrowType, Mode=TwoWay}"></ComboBox>
 				</DockPanel>
 
 				<DockPanel
@@ -68,8 +86,8 @@
 						Margin="0 0 16 0"
 						Width="110">Eyes</TextBlock>
 					<ComboBox
-						x:Name="Eyes"
-						SelectedValue="{Binding Path=SelectedEyes, Mode=TwoWay}"></ComboBox>
+						x:Name="EyeTypeCombo"
+						SelectedValue="{Binding Path=EyeType, Mode=TwoWay}"></ComboBox>
 				</DockPanel>
 
 				<DockPanel
@@ -80,8 +98,8 @@
 						Margin="0 0 16 0"
 						Width="110">Mouth</TextBlock>
 					<ComboBox
-						x:Name="Mouth"
-						SelectedValue="{Binding Path=SelectedMouth, Mode=TwoWay}"></ComboBox>
+						x:Name="MouthTypeCombo"
+						SelectedValue="{Binding Path=MouthType, Mode=TwoWay}"></ComboBox>
 				</DockPanel>
 
 				<DockPanel
@@ -92,8 +110,8 @@
 						Margin="0 0 16 0"
 						Width="110">Top</TextBlock>
 					<ComboBox
-						x:Name="TopType"
-						SelectedValue="{Binding Path=SelectedTopType, Mode=TwoWay}"></ComboBox>
+						x:Name="TopTypeCombo"
+						SelectedValue="{Binding Path=TopType, Mode=TwoWay}"></ComboBox>
 				</DockPanel>
 
 				<DockPanel
@@ -105,21 +123,21 @@
 						Margin="16 0 16 0"
 						Width="94">Hat Color</TextBlock>
 					<ComboBox
-						x:Name="HatColor"
-						SelectedValue="{Binding Path=SelectedHatColor, Mode=TwoWay}"></ComboBox>
+						x:Name="HatColorCombo"
+						SelectedValue="{Binding Path=HatColor, Mode=TwoWay}"></ComboBox>
 				</DockPanel>
 
 				<DockPanel
 					Margin="0 4"
-					Visibility="{Binding Path=AccessoryVisibility}">
+					Visibility="{Binding Path=AccessoriesVisibility}">
 					<TextBlock
 						VerticalAlignment="Center"
 						FontWeight="DemiBold"
 						Margin="16 0 16 0"
 						Width="94">Accessory</TextBlock>
 					<ComboBox
-						x:Name="Accessory"
-						SelectedValue="{Binding Path=SelectedAccessory, Mode=TwoWay}"></ComboBox>
+						x:Name="AccessoriesTypeCombo"
+						SelectedValue="{Binding Path=AccessoriesType, Mode=TwoWay}"></ComboBox>
 				</DockPanel>
 
 				<DockPanel
@@ -131,8 +149,8 @@
 						Margin="16 0 16 0"
 						Width="94">Hair Color</TextBlock>
 					<ComboBox
-						x:Name="HairColor"
-						SelectedValue="{Binding Path=SelectedHairColor, Mode=TwoWay}"></ComboBox>
+						x:Name="HairColorCombo"
+						SelectedValue="{Binding Path=HairColor, Mode=TwoWay}"></ComboBox>
 				</DockPanel>
 
 				<DockPanel
@@ -144,8 +162,8 @@
 						Margin="0 0 16 0"
 						Width="110">Facial Hair</TextBlock>
 					<ComboBox
-						x:Name="FacialHair"
-						SelectedValue="{Binding Path=SelectedFacialHair, Mode=TwoWay}"></ComboBox>
+						x:Name="FacialHairTypeCombo"
+						SelectedValue="{Binding Path=FacialHairType, Mode=TwoWay}"></ComboBox>
 				</DockPanel>
 
 				<DockPanel
@@ -157,8 +175,8 @@
 						Margin="16 0 16 0"
 						Width="94">Facial Hair Color</TextBlock>
 					<ComboBox
-						x:Name="FacialHairColor"
-						SelectedValue="{Binding Path=SelectedFacialHairColor, Mode=TwoWay}"></ComboBox>
+						x:Name="FacialHairColorCombo"
+						SelectedValue="{Binding Path=FacialHairColor, Mode=TwoWay}"></ComboBox>
 				</DockPanel>
 
 				<DockPanel
@@ -169,34 +187,34 @@
 						Margin="0 0 16 0"
 						Width="110">Clothing</TextBlock>
 					<ComboBox
-						x:Name="ClothingType"
-						SelectedValue="{Binding Path=SelectedClothingType, Mode=TwoWay}"></ComboBox>
+						x:Name="ClotheTypeCombo"
+						SelectedValue="{Binding Path=ClotheType, Mode=TwoWay}"></ComboBox>
 				</DockPanel>
 
 				<DockPanel
 					Margin="0 4"
-					Visibility="{Binding Path=ClothingColorVisibility}">
+					Visibility="{Binding Path=ClotheColorVisibility}">
 					<TextBlock
 						VerticalAlignment="Center"
 						FontWeight="DemiBold"
 						Margin="0 0 16 0"
 						Width="110">Clothing Color</TextBlock>
 					<ComboBox
-						x:Name="ClothingColor"
-						SelectedValue="{Binding Path=SelectedClothingColor, Mode=TwoWay}"></ComboBox>
+						x:Name="ClotheColorCombo"
+						SelectedValue="{Binding Path=ClotheColor, Mode=TwoWay}"></ComboBox>
 				</DockPanel>
 
 				<DockPanel
 					Margin="0 4"
-					Visibility="{Binding Path=ClothingGraphicsVisibility}">
+					Visibility="{Binding Path=GraphicTypeVisibility}">
 					<TextBlock
 						VerticalAlignment="Center"
 						FontWeight="DemiBold"
 						Margin="16 0 16 0"
 						Width="94">Clothing Graphic</TextBlock>
 					<ComboBox
-						x:Name="ClothingGraphic"
-						SelectedValue="{Binding Path=SelectedClothingGraphic, Mode=TwoWay}"></ComboBox>
+						x:Name="GraphicTypeCombo"
+						SelectedValue="{Binding Path=GraphicType, Mode=TwoWay}"></ComboBox>
 				</DockPanel>
 			</ItemsControl>
 		</ScrollViewer>

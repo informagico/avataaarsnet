@@ -1,11 +1,11 @@
 ﻿using AvataaarsNet.Helpers;
-using System.Collections.Generic;
+using AvataaarsNet.Models;
+using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media.Imaging;
 
 namespace AvataaarsNet
 {
@@ -14,124 +14,241 @@ namespace AvataaarsNet
 	/// </summary>
 	public partial class AvataaarsGenerator : UserControl, INotifyPropertyChanged
 	{
-		public static readonly DependencyProperty AvataaarsImageProperty = 
+		private static Avataaars avataaars;
+
+		#region DEPENDENCY PROPERTIES
+
+		/// <summary>
+		/// AvataaarsImage dependency property
+		/// </summary>
+		public static readonly DependencyProperty AvatarProperty =
 			DependencyProperty.Register(
-				"AvataaarsImage",
+				"Avatar",
 				typeof(Bitmap),
 				typeof(AvataaarsGenerator)
 			);
-		public Bitmap AvataaarsImage
+		public Bitmap Avatar
 		{
-			get { return (Bitmap)this.GetValue(AvataaarsImageProperty); }
-			set { this.SetValue(AvataaarsImageProperty, value); }
+			get { return (Bitmap)this.GetValue(AvatarProperty); }
+			set { this.SetValue(AvatarProperty, value); }
 		}
 
-		private static Avataaars avataaars;
+		/// <summary>
+		/// AvataaarsConfiguration dependency property
+		/// </summary>
+		public static DependencyProperty ConfigurationProperty =
+			DependencyProperty.Register(
+				"Configuration",
+				typeof(AvataaarsConfiguration),
+				typeof(AvataaarsGenerator),
+				new PropertyMetadata(OnConfigurationPropertyChanged)
+			);
+		public AvataaarsConfiguration Configuration
+		{
+			get { return (AvataaarsConfiguration)this.GetValue(ConfigurationProperty); }
+			set { this.SetValue(ConfigurationProperty, value); }
+		}
 
-		private string _SelectedAvatarStyle = "";
-		public string SelectedAvatarStyle
+		/// <summary>
+		/// AvataaarsWidthEnabled dependency property
+		/// </summary>
+		public static readonly DependencyProperty EnableWidthProperty =
+			DependencyProperty.Register(
+				"EnableWidth",
+				typeof(bool),
+				typeof(AvataaarsGenerator)
+			);
+		public bool EnableWidth
+		{
+			get { return (bool)this.GetValue(EnableWidthProperty); }
+			set { this.SetValue(EnableWidthProperty, value); }
+		}
+		#endregion
+
+		#region BINDING PROPERTIES
+		private uint _Width = 0;
+		public uint AvatarWidth
 		{
 			get
 			{
-				return _SelectedAvatarStyle;
+				return _Width;
 			}
 			set
 			{
-				_SelectedAvatarStyle = value;
-				if (!string.IsNullOrEmpty(value))
-					GenerateNewAvataaars();
-				OnPropertyChanged();
-			}
-		}
+				if (_Width == value)
+					return;
 
-		private string _SelectedSkinColor = "";
-		public string SelectedSkinColor
-		{
-			get
-			{
-				return _SelectedSkinColor;
-			}
-			set
-			{
-				_SelectedSkinColor = value;
-				if (!string.IsNullOrEmpty(value))
-					GenerateNewAvataaars();
-				OnPropertyChanged();
-			}
-		}
+				_Width = value;
 
-		private string _SelectedEyebrows = "";
-		public string SelectedEyebrows
-		{
-			get
-			{
-				return _SelectedEyebrows;
-			}
-			set
-			{
-				_SelectedEyebrows = value;
-				if (!string.IsNullOrEmpty(value))
-					GenerateNewAvataaars();
-				OnPropertyChanged();
-			}
-		}
-
-		private string _SelectedEyes = "";
-		public string SelectedEyes
-		{
-			get
-			{
-				return _SelectedEyes;
-			}
-			set
-			{
-				_SelectedEyes = value;
-				if (!string.IsNullOrEmpty(value))
-					GenerateNewAvataaars();
-				OnPropertyChanged();
-			}
-		}
-
-		private string _SelectedMouth = "";
-		public string SelectedMouth
-		{
-			get
-			{
-				return _SelectedMouth;
-			}
-			set
-			{
-				_SelectedMouth = value;
-				if (!string.IsNullOrEmpty(value))
-					GenerateNewAvataaars();
-				OnPropertyChanged();
-			}
-		}
-
-		private string _SelectedTopType = "";
-		public string SelectedTopType
-		{
-			get
-			{
-				return _SelectedTopType;
-			}
-			set
-			{
-				_SelectedTopType = value;
-				if (_SelectedTopType == "Eyepatch")
+				if (avataaars.Configuration.AvatarWidth != value)
 				{
-					SelectedAccessory = "";
-					AccessoryVisibility = Visibility.Collapsed;
+					avataaars.Configuration.AvatarWidth = _Width;
+
+					GenerateAvataaars();
+				}
+
+				OnPropertyChanged();
+			}
+		}
+
+		private string _AvatarStyle = String.Empty;
+		public string AvatarStyle
+		{
+			get
+			{
+				return _AvatarStyle;
+			}
+			set
+			{
+				if (_AvatarStyle == value)
+					return;
+
+				_AvatarStyle = value;
+
+				if (avataaars.Configuration.AvatarStyle != value)
+				{
+					avataaars.Configuration.AvatarStyle = _AvatarStyle;
+
+					if (!string.IsNullOrEmpty(value))
+						GenerateAvataaars();
+				}
+
+				OnPropertyChanged();
+			}
+		}
+
+		private string _SkinColor = String.Empty;
+		public string SkinColor
+		{
+			get
+			{
+				return _SkinColor;
+			}
+			set
+			{
+				if (_SkinColor == value)
+					return;
+
+				_SkinColor = value;
+
+				if (avataaars.Configuration.SkinColor != value)
+				{
+					avataaars.Configuration.SkinColor = _SkinColor;
+
+					if (!string.IsNullOrEmpty(value))
+						GenerateAvataaars();
+				}
+
+				OnPropertyChanged();
+			}
+		}
+
+		private string _EyebrowType = String.Empty;
+		public string EyebrowType
+		{
+			get
+			{
+				return _EyebrowType;
+			}
+			set
+			{
+				if (_EyebrowType == value)
+					return;
+
+				_EyebrowType = value;
+
+				if (avataaars.Configuration.EyebrowType != value)
+				{
+					avataaars.Configuration.EyebrowType = _EyebrowType;
+
+					if (!string.IsNullOrEmpty(value))
+						GenerateAvataaars();
+				}
+
+				OnPropertyChanged();
+			}
+		}
+
+		private string _EyeType = String.Empty;
+		public string EyeType
+		{
+			get
+			{
+				return _EyeType;
+			}
+			set
+			{
+				if (_EyeType == value)
+					return;
+
+				_EyeType = value;
+
+				if (avataaars.Configuration.EyeType != value)
+				{
+					avataaars.Configuration.EyeType = _EyeType;
+
+					if (!string.IsNullOrEmpty(value))
+						GenerateAvataaars();
+				}
+
+				OnPropertyChanged();
+			}
+		}
+
+		private string _MouthType = String.Empty;
+		public string MouthType
+		{
+			get
+			{
+				return _MouthType;
+			}
+			set
+			{
+				if (_MouthType == value)
+					return;
+
+				_MouthType = value;
+
+				if (avataaars.Configuration.MouthType != value)
+				{
+					avataaars.Configuration.MouthType = _MouthType;
+
+					if (!string.IsNullOrEmpty(value))
+						GenerateAvataaars();
+				}
+
+				OnPropertyChanged();
+			}
+		}
+
+		private string _TopType = String.Empty;
+		public string TopType
+		{
+			get
+			{
+				return _TopType;
+			}
+			set
+			{
+				if (_TopType == value)
+					return;
+
+				_TopType = value;
+
+				if (_TopType == "Eyepatch")
+				{
+					AccessoriesType = "";
+					AccessoriesVisibility = Visibility.Collapsed;
 				}
 				else
 				{
-					AccessoryVisibility = Visibility.Visible;
+					AccessoriesVisibility = Visibility.Visible;
 				}
 
-				if (_SelectedTopType == "Hijab")
+				if (_TopType == "Hijab")
 				{
-					SelectedFacialHair = "";
-					SelectedFacialHairColor = "";
+					FacialHairType = "";
+					FacialHairColor = "";
 					FacialHairVisibility = Visibility.Collapsed;
 				}
 				else
@@ -139,34 +256,34 @@ namespace AvataaarsNet
 					FacialHairVisibility = Visibility.Visible;
 				}
 
-				if (_SelectedTopType == "Hijab" ||
-					_SelectedTopType == "Turban" ||
-					_SelectedTopType == "WinterHat1" ||
-					_SelectedTopType == "WinterHat2" ||
-					_SelectedTopType == "WinterHat3" ||
-					_SelectedTopType == "WinterHat4")
+				if (_TopType == "Hijab" ||
+					_TopType == "Turban" ||
+					_TopType == "WinterHat1" ||
+					_TopType == "WinterHat2" ||
+					_TopType == "WinterHat3" ||
+					_TopType == "WinterHat4")
 				{
 					HatColorVisibility = Visibility.Visible;
 				}
 				else
 				{
-					SelectedHatColor = "";
+					HatColor = "";
 					HatColorVisibility = Visibility.Collapsed;
 				}
 
-				if (_SelectedTopType == "Hat" ||
-					_SelectedTopType == "NoHair" ||
-					_SelectedTopType == "Eyepatch" ||
-					_SelectedTopType == "Hijab" ||
-					_SelectedTopType == "Turban" ||
-					_SelectedTopType == "WinterHat1" ||
-					_SelectedTopType == "WinterHat2" ||
-					_SelectedTopType == "WinterHat3" ||
-					_SelectedTopType == "WinterHat4" ||
-					_SelectedTopType == "LongHairFrida" ||
-					_SelectedTopType == "LongHairShavedSides")
+				if (_TopType == "Hat" ||
+					_TopType == "NoHair" ||
+					_TopType == "Eyepatch" ||
+					_TopType == "Hijab" ||
+					_TopType == "Turban" ||
+					_TopType == "WinterHat1" ||
+					_TopType == "WinterHat2" ||
+					_TopType == "WinterHat3" ||
+					_TopType == "WinterHat4" ||
+					_TopType == "LongHairFrida" ||
+					_TopType == "LongHairShavedSides")
 				{
-					SelectedHairColor = "";
+					HairColor = "";
 					HairColorVisibility = Visibility.Collapsed;
 				}
 				else
@@ -174,172 +291,262 @@ namespace AvataaarsNet
 					HairColorVisibility = Visibility.Visible;
 				}
 
-				if (!string.IsNullOrEmpty(value))
-					GenerateNewAvataaars();
-				OnPropertyChanged();
-			}
-		}
-
-		private string _SelectedHatColor = "";
-		public string SelectedHatColor
-		{
-			get
-			{
-				return _SelectedHatColor;
-			}
-			set
-			{
-				_SelectedHatColor = value;
-				if (!string.IsNullOrEmpty(value))
-					GenerateNewAvataaars();
-				OnPropertyChanged();
-			}
-		}
-
-		private string _SelectedAccessory = "";
-		public string SelectedAccessory
-		{
-			get
-			{
-				return _SelectedAccessory;
-			}
-			set
-			{
-				_SelectedAccessory = value;
-				if (!string.IsNullOrEmpty(value))
-					GenerateNewAvataaars();
-				OnPropertyChanged();
-			}
-		}
-
-		private string _SelectedHairColor = "";
-		public string SelectedHairColor
-		{
-			get
-			{
-				return _SelectedHairColor;
-			}
-			set
-			{
-				_SelectedHairColor = value;
-				if (!string.IsNullOrEmpty(value))
-					GenerateNewAvataaars();
-				OnPropertyChanged();
-			}
-		}
-
-		private string _SelectedFacialHair = "";
-		public string SelectedFacialHair
-		{
-			get
-			{
-				return _SelectedFacialHair;
-			}
-			set
-			{
-				_SelectedFacialHair = value;
-				if (!string.IsNullOrEmpty(value))
-					GenerateNewAvataaars();
-				OnPropertyChanged();
-			}
-		}
-
-		private string _SelectedFacialHairColor = "";
-		public string SelectedFacialHairColor
-		{
-			get
-			{
-				return _SelectedFacialHairColor;
-			}
-			set
-			{
-				_SelectedFacialHairColor = value;
-				if (!string.IsNullOrEmpty(value))
-					GenerateNewAvataaars();
-				OnPropertyChanged();
-			}
-		}
-
-		private string _SelectedClothingType = "";
-		public string SelectedClothingType
-		{
-			get
-			{
-				return _SelectedClothingType;
-			}
-			set
-			{
-				_SelectedClothingType = value;
-
-				if (_SelectedClothingType == "BlazerShirt" ||
-					_SelectedClothingType == "BlazerSweater")
+				if (avataaars.Configuration.TopType != value)
 				{
-					SelectedClothingColor = "";
-					ClothingColorVisibility = Visibility.Collapsed;
+					avataaars.Configuration.TopType = _TopType;
+
+					if (!string.IsNullOrEmpty(value))
+						GenerateAvataaars();
+				}
+
+				OnPropertyChanged();
+			}
+		}
+
+		private string _HatColor = String.Empty;
+		public string HatColor
+		{
+			get
+			{
+				return avataaars.Configuration.HatColor;
+			}
+			set
+			{
+				if (_HatColor == value)
+					return;
+
+				_HatColor = value;
+
+				if (avataaars.Configuration.HatColor != value)
+				{
+					avataaars.Configuration.HatColor = _HatColor;
+
+					if (!string.IsNullOrEmpty(value))
+						GenerateAvataaars();
+				}
+
+				OnPropertyChanged();
+			}
+		}
+
+		private string _AccessoriesType = String.Empty;
+		public string AccessoriesType
+		{
+			get
+			{
+				return _AccessoriesType;
+			}
+			set
+			{
+				if (_AccessoriesType == value)
+					return;
+
+				_AccessoriesType = value;
+
+				if (avataaars.Configuration.AccessoriesType != value)
+				{
+					avataaars.Configuration.AccessoriesType = _AccessoriesType;
+
+					if (!string.IsNullOrEmpty(value))
+						GenerateAvataaars();
+				}
+
+				OnPropertyChanged();
+			}
+		}
+
+		private string _HairColor = String.Empty;
+		public string HairColor
+		{
+			get
+			{
+				return _HairColor;
+			}
+			set
+			{
+				if (_HairColor == value)
+					return;
+
+				_HairColor = value;
+
+				if (avataaars.Configuration.HairColor != value)
+				{
+					avataaars.Configuration.HairColor = _HairColor;
+
+					if (!string.IsNullOrEmpty(value))
+						GenerateAvataaars();
+				}
+
+				OnPropertyChanged();
+			}
+		}
+
+		private string _FacialHairType = String.Empty;
+		public string FacialHairType
+		{
+			get
+			{
+				return _FacialHairType;
+			}
+			set
+			{
+				if (_FacialHairType == value)
+					return;
+
+				_FacialHairType = value;
+
+				if (avataaars.Configuration.FacialHairType != value)
+				{
+					avataaars.Configuration.FacialHairType = _FacialHairType;
+
+					if (!string.IsNullOrEmpty(value))
+						GenerateAvataaars();
+				}
+
+				OnPropertyChanged();
+			}
+		}
+
+		private string _FacialHairColor = String.Empty;
+		public string FacialHairColor
+		{
+			get
+			{
+				return _FacialHairColor;
+			}
+			set
+			{
+				if (_FacialHairColor == value)
+					return;
+
+				_FacialHairColor = value;
+
+				if (avataaars.Configuration.FacialHairColor != value)
+				{
+					avataaars.Configuration.FacialHairColor = _FacialHairColor;
+
+					if (!string.IsNullOrEmpty(value))
+						GenerateAvataaars();
+				}
+
+				OnPropertyChanged();
+			}
+		}
+
+		private string _ClotheType = String.Empty;
+		public string ClotheType
+		{
+			get
+			{
+				return _ClotheType;
+			}
+			set
+			{
+				if (_ClotheType == value)
+					return;
+
+				_ClotheType = value;
+
+				if (_ClotheType == "BlazerShirt" ||
+					_ClotheType == "BlazerSweater")
+				{
+					ClotheColor = "";
+					ClotheColorVisibility = Visibility.Collapsed;
 				}
 				else
 				{
-					ClothingColorVisibility = Visibility.Visible;
+					ClotheColorVisibility = Visibility.Visible;
 				}
 
-				if (_SelectedClothingType == "GraphicShirt")
+				if (_ClotheType == "GraphicShirt")
 				{
-					ClothingGraphicsVisibility = Visibility.Visible;
+					GraphicTypeVisibility = Visibility.Visible;
 				}
 				else
 				{
-					SelectedClothingGraphic = "";
-					ClothingGraphicsVisibility = Visibility.Collapsed;
+					GraphicType = "";
+					GraphicTypeVisibility = Visibility.Collapsed;
 				}
 
-				if (!string.IsNullOrEmpty(value))
-					GenerateNewAvataaars();
+				if (avataaars.Configuration.ClotheType != value)
+				{
+					avataaars.Configuration.ClotheType = _ClotheType;
+
+					if (!string.IsNullOrEmpty(value))
+						GenerateAvataaars();
+				}
+
 				OnPropertyChanged();
 			}
 		}
 
-		private string _SelectedClothingColor = "";
-		public string SelectedClothingColor
+		private string _ClotheColor = String.Empty;
+		public string ClotheColor
 		{
 			get
 			{
-				return _SelectedClothingColor;
+				return _ClotheColor;
 			}
 			set
 			{
-				_SelectedClothingColor = value;
-				if (!string.IsNullOrEmpty(value))
-					GenerateNewAvataaars();
+				if (_ClotheColor == value)
+					return;
+
+				_ClotheColor = value;
+
+				if (avataaars.Configuration.ClotheColor != value)
+				{
+					avataaars.Configuration.ClotheColor = _ClotheColor;
+
+					if (!string.IsNullOrEmpty(value))
+						GenerateAvataaars();
+				}
+
 				OnPropertyChanged();
 			}
 		}
 
-		private string _SelectedClothingGraphic = "";
-		public string SelectedClothingGraphic
+		private string _GraphicType = String.Empty;
+		public string GraphicType
 		{
 			get
 			{
-				return _SelectedClothingGraphic;
+				return _GraphicType;
 			}
 			set
 			{
-				_SelectedClothingGraphic = value;
-				if (!string.IsNullOrEmpty(value))
-					GenerateNewAvataaars();
+				if (_GraphicType == value)
+					return;
+
+				_GraphicType = value;
+
+				if (avataaars.Configuration.GraphicType != value)
+				{
+					avataaars.Configuration.GraphicType = _GraphicType;
+
+					if (!string.IsNullOrEmpty(value))
+						GenerateAvataaars();
+				}
+
 				OnPropertyChanged();
 			}
 		}
+		#endregion
 
-		private Visibility _AccessoryVisibility = Visibility.Collapsed;
-		public Visibility AccessoryVisibility
+		#region VISIBILITY PROPERTIES
+		private Visibility _AccessoriesVisibility = Visibility.Collapsed;
+		public Visibility AccessoriesVisibility
 		{
 			get
 			{
-				return _AccessoryVisibility;
+				return _AccessoriesVisibility;
 			}
 			set
 			{
-				_AccessoryVisibility = value;
+				if (_AccessoriesVisibility == value)
+					return;
+
+				_AccessoriesVisibility = value;
 				OnPropertyChanged();
 			}
 		}
@@ -353,7 +560,11 @@ namespace AvataaarsNet
 			}
 			set
 			{
+				if (_FacialHairVisibility == value)
+					return;
+
 				_FacialHairVisibility = value;
+
 				OnPropertyChanged();
 			}
 		}
@@ -367,7 +578,11 @@ namespace AvataaarsNet
 			}
 			set
 			{
+				if (_HatColorVisibility == value)
+					return;
+
 				_HatColorVisibility = value;
+
 				OnPropertyChanged();
 			}
 		}
@@ -381,38 +596,102 @@ namespace AvataaarsNet
 			}
 			set
 			{
+				if (_HairColorVisibility == value)
+					return;
+
 				_HairColorVisibility = value;
+
 				OnPropertyChanged();
 			}
 		}
 
-		private Visibility _ClothingColorVisibility = Visibility.Collapsed;
-		public Visibility ClothingColorVisibility
+		private Visibility _ClotheColorVisibility = Visibility.Collapsed;
+		public Visibility ClotheColorVisibility
 		{
 			get
 			{
-				return _ClothingColorVisibility;
+				return _ClotheColorVisibility;
 			}
 			set
 			{
-				_ClothingColorVisibility = value;
+				if (_ClotheColorVisibility == value)
+					return;
+
+				_ClotheColorVisibility = value;
+
 				OnPropertyChanged();
 			}
 		}
 
-		private Visibility _ClothingGraphicsVisibility = Visibility.Collapsed;
-		public Visibility ClothingGraphicsVisibility
+		private Visibility _GraphicTypeVisibility = Visibility.Collapsed;
+		public Visibility GraphicTypeVisibility
 		{
 			get
 			{
-				return _ClothingGraphicsVisibility;
+				return _GraphicTypeVisibility;
 			}
 			set
 			{
-				_ClothingGraphicsVisibility = value;
+				if (_GraphicTypeVisibility == value)
+					return;
+
+				_GraphicTypeVisibility = value;
+
 				OnPropertyChanged();
 			}
 		}
+		#endregion
+
+		#region PRIVATE METHODS
+		private async void GenerateAvataaars()
+		{
+			// generate avatar and preview
+			Bitmap bmp = await avataaars.Generate();
+			AvataaarsPreview.Source = ImageConverterHelper.BitmapToBitmapImage(bmp);
+
+			// dependency properties
+			Avatar = bmp;
+			Configuration = avataaars.Configuration;
+		}
+
+		private void AssignLists()
+		{
+			AvatarWidthCombo.ItemsSource = AvataaarsSettings.WidthList;
+			AvatarStyleCombo.ItemsSource = AvataaarsSettings.AvatarStyleList;
+			SkinColorCombo.ItemsSource = AvataaarsSettings.SkinColorList;
+			EyebrowTypeCombo.ItemsSource = AvataaarsSettings.EyebrowTypeList;
+			EyeTypeCombo.ItemsSource = AvataaarsSettings.EyeTypeList;
+			MouthTypeCombo.ItemsSource = AvataaarsSettings.MouthTypeList;
+			TopTypeCombo.ItemsSource = AvataaarsSettings.TopTypeList;
+			HatColorCombo.ItemsSource = AvataaarsSettings.HatColorList;
+			AccessoriesTypeCombo.ItemsSource = AvataaarsSettings.AccessoriesTypeList;
+			HairColorCombo.ItemsSource = AvataaarsSettings.HairColorList;
+			FacialHairTypeCombo.ItemsSource = AvataaarsSettings.FacialHairTypeList;
+			FacialHairColorCombo.ItemsSource = AvataaarsSettings.FacialHairColorList;
+			ClotheTypeCombo.ItemsSource = AvataaarsSettings.ClotheTypeList;
+			ClotheColorCombo.ItemsSource = AvataaarsSettings.ClotheColorList;
+			GraphicTypeCombo.ItemsSource = AvataaarsSettings.GraphicTypeList;
+		}
+
+		private void LoadConfiguration()
+		{
+			AvatarWidth = avataaars.Configuration.AvatarWidth;
+			AvatarStyle = avataaars.Configuration.AvatarStyle;
+			SkinColor = avataaars.Configuration.SkinColor;
+			EyebrowType = avataaars.Configuration.EyebrowType;
+			EyeType = avataaars.Configuration.EyeType;
+			MouthType = avataaars.Configuration.MouthType;
+			TopType = avataaars.Configuration.TopType;
+			HatColor = avataaars.Configuration.HatColor;
+			AccessoriesType = avataaars.Configuration.AccessoriesType;
+			HairColor = avataaars.Configuration.HairColor;
+			FacialHairType = avataaars.Configuration.FacialHairType;
+			FacialHairColor = avataaars.Configuration.FacialHairColor;
+			ClotheType = avataaars.Configuration.ClotheType;
+			ClotheColor = avataaars.Configuration.ClotheColor;
+			GraphicType = avataaars.Configuration.GraphicType;
+		}
+		#endregion
 
 		public AvataaarsGenerator()
 		{
@@ -420,31 +699,13 @@ namespace AvataaarsNet
 			DataContext = this;
 
 			avataaars = new Avataaars();
-			AvatarStyle.ItemsSource = avataaars.avatarStyle;
-			SkinColor.ItemsSource = avataaars.skinColor;
-			Eyesbrows.ItemsSource = avataaars.eyeBrowType;
-			Eyes.ItemsSource = avataaars.eyeType;
-			Mouth.ItemsSource = avataaars.mouthType;
-			TopType.ItemsSource = avataaars.topTypes;
-			HatColor.ItemsSource = avataaars.hatColors;
-			Accessory.ItemsSource = avataaars.accessories;
-			HairColor.ItemsSource = avataaars.hairColors;
-			FacialHair.ItemsSource = avataaars.facialHairTypes;
-			FacialHairColor.ItemsSource = avataaars.facialHairColors;
-			ClothingType.ItemsSource = avataaars.clothingType;
-			ClothingColor.ItemsSource = avataaars.clothColor;
-			ClothingGraphic.ItemsSource = avataaars.clothGraph;
 
-			GenerateNewAvataaars();
+			AssignLists();
+			LoadConfiguration();
+			GenerateAvataaars();
 		}
 
-		private async void GenerateNewAvataaars()
-		{
-			Bitmap bmp = await avataaars.GetNew(_SelectedAvatarStyle, _SelectedSkinColor, _SelectedEyebrows, _SelectedEyes, _SelectedMouth, _SelectedTopType, _SelectedHatColor, _SelectedAccessory, _SelectedHairColor, _SelectedFacialHair, _SelectedFacialHairColor, _SelectedClothingType, _SelectedClothingColor, _SelectedClothingGraphic);
-			AvataaarsPreview.Source = ImageConverterHelper.BitmapToBitmapImage(bmp);
-			AvataaarsImage = bmp;
-		}
-
+		#region PROPERTY CHANGED EVENTS & CALLBACKS
 		public event PropertyChangedEventHandler PropertyChanged;
 		protected void OnPropertyChanged([CallerMemberName]string propertyName = null)
 		{
@@ -455,5 +716,16 @@ namespace AvataaarsNet
 				handler(this, e);
 			}
 		}
+
+		private static void OnConfigurationPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
+		{
+			if (avataaars.Configuration != (sender as AvataaarsGenerator).Configuration)
+			{
+				avataaars.Configuration = (sender as AvataaarsGenerator).Configuration;
+				(sender as AvataaarsGenerator).LoadConfiguration();
+				(sender as AvataaarsGenerator).GenerateAvataaars();
+			}
+		}
+		#endregion
 	}
 }
