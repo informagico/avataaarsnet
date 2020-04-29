@@ -9,7 +9,7 @@ namespace AvataaarsNet
 {
 	public class Avataaars
 	{
-		private const string baseUrl = "https://avataaars.io/"
+		private const string baseUrl = "https://avataaars.io/";
 
 		internal AvataaarsConfiguration Configuration { get; set; }
 
