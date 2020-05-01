@@ -695,11 +695,10 @@ namespace AvataaarsNet
 
 		public AvataaarsGenerator()
 		{
-			InitializeComponent();
-			DataContext = this;
-
 			avataaars = new Avataaars();
 
+			InitializeComponent();
+			
 			AssignLists();
 			LoadConfiguration();
 			GenerateAvataaars();

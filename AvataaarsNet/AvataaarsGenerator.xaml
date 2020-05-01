@@ -30,7 +30,7 @@
 			<ItemsControl
 				Margin="8 0">
 				<DockPanel
-					Visibility="{Binding Path=EnableWidth, Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}"
+					Visibility="{Binding Path=EnableWidth, ElementName=Generator, Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}"
 					Margin="0 4">
 					<TextBlock
 						VerticalAlignment="Center"
@@ -51,7 +51,7 @@
 						Width="110">Style</TextBlock>
 					<ComboBox
 						x:Name="AvatarStyleCombo"
-						SelectedValue="{Binding Path=AvatarStyle, Mode=TwoWay}"></ComboBox>
+						SelectedValue="{Binding Path=AvatarStyle, ElementName=Generator, Mode=TwoWay}"></ComboBox>
 				</DockPanel>
 
 				<DockPanel
@@ -63,7 +63,7 @@
 						Width="110">Skin</TextBlock>
 					<ComboBox
 						x:Name="SkinColorCombo"
-						SelectedValue="{Binding Path=SkinColor, Mode=TwoWay}"></ComboBox>
+						SelectedValue="{Binding Path=SkinColor, ElementName=Generator, Mode=TwoWay}"></ComboBox>
 				</DockPanel>
 
 				<DockPanel
@@ -75,7 +75,7 @@
 						Width="110">Eyebrows</TextBlock>
 					<ComboBox
 						x:Name="EyebrowTypeCombo"
-						SelectedValue="{Binding Path=EyebrowType, Mode=TwoWay}"></ComboBox>
+						SelectedValue="{Binding Path=EyebrowType, ElementName=Generator, Mode=TwoWay}"></ComboBox>
 				</DockPanel>
 
 				<DockPanel
@@ -87,7 +87,7 @@
 						Width="110">Eyes</TextBlock>
 					<ComboBox
 						x:Name="EyeTypeCombo"
-						SelectedValue="{Binding Path=EyeType, Mode=TwoWay}"></ComboBox>
+						SelectedValue="{Binding Path=EyeType, ElementName=Generator, Mode=TwoWay}"></ComboBox>
 				</DockPanel>
 
 				<DockPanel
@@ -99,7 +99,7 @@
 						Width="110">Mouth</TextBlock>
 					<ComboBox
 						x:Name="MouthTypeCombo"
-						SelectedValue="{Binding Path=MouthType, Mode=TwoWay}"></ComboBox>
+						SelectedValue="{Binding Path=MouthType, ElementName=Generator, Mode=TwoWay}"></ComboBox>
 				</DockPanel>
 
 				<DockPanel
@@ -111,12 +111,12 @@
 						Width="110">Top</TextBlock>
 					<ComboBox
 						x:Name="TopTypeCombo"
-						SelectedValue="{Binding Path=TopType, Mode=TwoWay}"></ComboBox>
+						SelectedValue="{Binding Path=TopType, ElementName=Generator, Mode=TwoWay}"></ComboBox>
 				</DockPanel>
 
 				<DockPanel
 					Margin="0 4"
-					Visibility="{Binding Path=HatColorVisibility}">
+					Visibility="{Binding Path=HatColorVisibility, ElementName=Generator}">
 					<TextBlock
 						VerticalAlignment="Center"
 						FontWeight="DemiBold"
@@ -124,12 +124,12 @@
 						Width="94">Hat Color</TextBlock>
 					<ComboBox
 						x:Name="HatColorCombo"
-						SelectedValue="{Binding Path=HatColor, Mode=TwoWay}"></ComboBox>
+						SelectedValue="{Binding Path=HatColor, ElementName=Generator, Mode=TwoWay}"></ComboBox>
 				</DockPanel>
 
 				<DockPanel
 					Margin="0 4"
-					Visibility="{Binding Path=AccessoriesVisibility}">
+					Visibility="{Binding Path=AccessoriesVisibility, ElementName=Generator}">
 					<TextBlock
 						VerticalAlignment="Center"
 						FontWeight="DemiBold"
@@ -137,12 +137,12 @@
 						Width="94">Accessory</TextBlock>
 					<ComboBox
 						x:Name="AccessoriesTypeCombo"
-						SelectedValue="{Binding Path=AccessoriesType, Mode=TwoWay}"></ComboBox>
+						SelectedValue="{Binding Path=AccessoriesType, ElementName=Generator, Mode=TwoWay}"></ComboBox>
 				</DockPanel>
 
 				<DockPanel
 					Margin="0 4"
-					Visibility="{Binding Path=HairColorVisibility}">
+					Visibility="{Binding Path=HairColorVisibility, ElementName=Generator}">
 					<TextBlock
 						VerticalAlignment="Center"
 						FontWeight="DemiBold"
@@ -150,12 +150,12 @@
 						Width="94">Hair Color</TextBlock>
 					<ComboBox
 						x:Name="HairColorCombo"
-						SelectedValue="{Binding Path=HairColor, Mode=TwoWay}"></ComboBox>
+						SelectedValue="{Binding Path=HairColor, ElementName=Generator, Mode=TwoWay}"></ComboBox>
 				</DockPanel>
 
 				<DockPanel
 					Margin="0 4"
-					Visibility="{Binding Path=FacialHairVisibility}">
+					Visibility="{Binding Path=FacialHairVisibility, ElementName=Generator}">
 					<TextBlock
 						VerticalAlignment="Center"
 						FontWeight="DemiBold"
@@ -163,12 +163,12 @@
 						Width="110">Facial Hair</TextBlock>
 					<ComboBox
 						x:Name="FacialHairTypeCombo"
-						SelectedValue="{Binding Path=FacialHairType, Mode=TwoWay}"></ComboBox>
+						SelectedValue="{Binding Path=FacialHairType, ElementName=Generator, Mode=TwoWay}"></ComboBox>
 				</DockPanel>
 
 				<DockPanel
 					Margin="0 4"
-					Visibility="{Binding Path=FacialHairVisibility}">
+					Visibility="{Binding Path=FacialHairVisibility, ElementName=Generator}">
 					<TextBlock
 						VerticalAlignment="Center"
 						FontWeight="DemiBold"
@@ -176,7 +176,7 @@
 						Width="94">Facial Hair Color</TextBlock>
 					<ComboBox
 						x:Name="FacialHairColorCombo"
-						SelectedValue="{Binding Path=FacialHairColor, Mode=TwoWay}"></ComboBox>
+						SelectedValue="{Binding Path=FacialHairColor, ElementName=Generator, Mode=TwoWay}"></ComboBox>
 				</DockPanel>
 
 				<DockPanel
@@ -188,12 +188,12 @@
 						Width="110">Clothing</TextBlock>
 					<ComboBox
 						x:Name="ClotheTypeCombo"
-						SelectedValue="{Binding Path=ClotheType, Mode=TwoWay}"></ComboBox>
+						SelectedValue="{Binding Path=ClotheType, ElementName=Generator, Mode=TwoWay}"></ComboBox>
 				</DockPanel>
 
 				<DockPanel
 					Margin="0 4"
-					Visibility="{Binding Path=ClotheColorVisibility}">
+					Visibility="{Binding Path=ClotheColorVisibility, ElementName=Generator}">
 					<TextBlock
 						VerticalAlignment="Center"
 						FontWeight="DemiBold"
@@ -201,12 +201,12 @@
 						Width="110">Clothing Color</TextBlock>
 					<ComboBox
 						x:Name="ClotheColorCombo"
-						SelectedValue="{Binding Path=ClotheColor, Mode=TwoWay}"></ComboBox>
+						SelectedValue="{Binding Path=ClotheColor, ElementName=Generator, Mode=TwoWay}"></ComboBox>
 				</DockPanel>
 
 				<DockPanel
 					Margin="0 4"
-					Visibility="{Binding Path=GraphicTypeVisibility}">
+					Visibility="{Binding Path=GraphicTypeVisibility, ElementName=Generator}">
 					<TextBlock
 						VerticalAlignment="Center"
 						FontWeight="DemiBold"
@@ -214,7 +214,7 @@
 						Width="94">Clothing Graphic</TextBlock>
 					<ComboBox
 						x:Name="GraphicTypeCombo"
-						SelectedValue="{Binding Path=GraphicType, Mode=TwoWay}"></ComboBox>
+						SelectedValue="{Binding Path=GraphicType, ElementName=Generator, Mode=TwoWay}"></ComboBox>
 				</DockPanel>
 			</ItemsControl>
 		</ScrollViewer>
